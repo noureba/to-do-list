@@ -4,7 +4,7 @@ import "dotenv/config";
 const isAuth = async (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
-    return res.status(400).json({
+    return res.json({
       success: false,
       message: "You are not authorized, plase login",
     });
@@ -14,14 +14,14 @@ const isAuth = async (req, res, next) => {
     if (decoded.id) {
       req.body.userId = decoded.id;
     } else {
-      return res.status(400).json({
+      return res.json({
         succes: false,
         message: "your are not authorized, plase login again",
       });
     }
     next();
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
       message: error.message,
     });

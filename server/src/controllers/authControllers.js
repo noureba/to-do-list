@@ -6,7 +6,7 @@ import userModel from "../models/userSchema.js";
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
   if ((!name, !email, !password)) {
-    return res.status(400).json({
+    return res.json({
       success: false,
       message: "Messing details",
     });
@@ -15,7 +15,7 @@ export const register = async (req, res) => {
     //check if user already exist
     const userCheck = await userModel.findOne({ email });
     if (userCheck) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Email already exist",
       });
@@ -25,12 +25,12 @@ export const register = async (req, res) => {
     const user = new userModel({ name, email, password: hashPassword });
     await user.save();
 
-    res.status(200).json({
+    res.json({
       success: true,
       message: "Your acount has been created successuly",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
       message: error.message,
     });
@@ -41,7 +41,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   if ((!email, !password)) {
-    return res.status(400).josn({
+    return res.josn({
       success: false,
       message: "Details are messing",
     });
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
     //check email
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Email or password not correct",
       });
@@ -60,7 +60,7 @@ export const login = async (req, res) => {
     //check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Email or password not correct",
       });
@@ -81,12 +81,12 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
+    res.json({
       success: true,
       message: "you login successfuly",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
       message: error.message,
     });
@@ -101,12 +101,12 @@ export const logout = async (req, res) => {
       secure: process.env.MODE == "production",
       sameSite: process.env.MODE === "production" ? "none" : "Lax",
     });
-    res.status(200).json({
+    res.json({
       success: true,
       message: "Logout succes",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
       message: error.message,
     });

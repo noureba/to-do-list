@@ -3,7 +3,7 @@ import userModel from "../models/userSchema.js";
 export const userData = async (req, res) => {
   const { userId } = req.body;
   if (!userId) {
-    return res.status(400).json({
+    return res.json({
       success: false,
       message: "User not found",
     });
@@ -17,16 +17,17 @@ export const userData = async (req, res) => {
         message: "user not found",
       });
     }
-    res.status(200).json({
+    res.json({
       success: true,
       user: {
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,
+        photo: user.photo
       },
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: true,
       message: error.message,
     });
