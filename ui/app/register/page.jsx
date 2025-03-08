@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState, useLayoutEffect } from "react";
 import ListImage from "../../public/List.png";
-import Image from "next/Image";
+import Image from "next/image";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineMail } from "react-icons/md";

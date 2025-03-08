@@ -5,7 +5,7 @@ import { UserContext } from "../contexts/userContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Image from "next/Image";
+import Image from "next/image";
 import { FaBars } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import Logo from "../public/logo.png";

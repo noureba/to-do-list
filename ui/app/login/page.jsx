@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useState, useEffect, useLayoutEffect } from "react";
 import ListImage from "../../public/List.png";
-import Image from "next/Image";
+import Image from "next/image";
 import Link from "next/link";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";

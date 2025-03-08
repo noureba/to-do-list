@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../../public/logo.png";
-import Image from "next/Image";
+import Image from "next/image";
 
 function Setting() {
   return (

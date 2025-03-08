@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../contexts/userContext";
-import Image from "next/Image";
+import Image from "next/image";
 import Logo from "../../public/logo.png";
 import { FaBookOpen } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
