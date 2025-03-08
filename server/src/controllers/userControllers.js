@@ -1,3 +1,4 @@
+import userTask from "../models/tasksSchema.js";
 import userModel from "../models/userSchema.js";
 
 export const userData = async (req, res) => {
@@ -33,3 +34,35 @@ export const userData = async (req, res) => {
     });
   }
 };
+
+
+//tskts list 
+export const tasksList = async (req, res)=>{
+  const {userId} = req.body;
+  if(!userId){
+    return res.json({
+      success: false,
+      message: "Detail messing",
+    })
+  }
+
+  try {
+    const tasks = await userTask.find({userId})
+    if(!tasks){
+      return res.json({
+        success: false,
+        message: "not found"
+      })
+    }
+
+    res.json({
+      success: true,
+      tasks
+    })
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message
+    })
+  }
+}

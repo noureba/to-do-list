@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
+import taskRoutes from './src/routes/taskRoutes.js'
 import {mongoDB} from "./src/helpers/connectDB.js"
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/", (rea, res) => {
 });
 app.use("/api/auth/", authRoutes);
 app.use("/api/user/", userRoutes);
+app.use("/api/task/", taskRoutes);
 
 
 //server listen
