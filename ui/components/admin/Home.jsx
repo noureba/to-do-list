@@ -111,7 +111,7 @@ function Home() {
           </thead>
           <tbody>
             <React.Suspense fallback="loading ...">
-              {tasks
+              {tasks ? tasks
                 .filter((task) => task.status === "new")
                 .map((task, index) => (
                   <tr className="hover:bg-gray-100" key={index}>
@@ -148,7 +148,7 @@ function Home() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )): null}
             </React.Suspense>
           </tbody>
         </table>
