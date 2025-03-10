@@ -4,12 +4,13 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
-import taskRoutes from './src/routes/taskRoutes.js'
-import {mongoDB} from "./src/helpers/connectDB.js"
+import taskRoutes from "./src/routes/taskRoutes.js";
+import categorieRoutes from "./src/routes/categorieRoutes.js";
+import { mongoDB } from "./src/helpers/connectDB.js";
 
 const app = express();
 
-mongoDB(process.env.MONGO_DB_URL)
+mongoDB(process.env.MONGO_DB_URL);
 
 // use middlewares
 app.use(
@@ -28,7 +29,7 @@ app.get("/", (rea, res) => {
 app.use("/api/auth/", authRoutes);
 app.use("/api/user/", userRoutes);
 app.use("/api/task/", taskRoutes);
-
+app.use("/api/category/", categorieRoutes);
 
 //server listen
 const port = process.env.PORT || 4000;

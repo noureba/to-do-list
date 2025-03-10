@@ -1,16 +1,35 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useLayoutEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../../contexts/userContext";
 import { toast } from "react-toastify";
 
 function AddNowTask() {
-  const {backendURL} = useContext(UserContext);
+  const { backendURL, taskView, setTasksView } = useContext(UserContext);
   const [task, setNewTask] = useState({
     title: "",
     desc: "",
     categorie: "",
     date: "",
   });
+  const [categoriesData, setCategoryData] = useState([]);
+
+  useLayoutEffect(() => {
+    const Data = async () => {
+      try {
+        const { data } = await axios.get(backendURL + "/api/user/categories", {
+          withCredentials: true,
+        });
+        if (data.success) {
+          setCategoryData(data.categories);
+        } else {
+          toast.error(data.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    Data();
+  }, []);
 
   const addNewTaskHandler = async (e) => {
     e.preventDefault();
@@ -25,6 +44,12 @@ function AddNowTask() {
       );
       if (data.success) {
         toast.success(data.message);
+        setNewTask({
+          title: "",
+          desc: "",
+          categorie: "",
+          date: "",
+        });
       } else {
         toast.error(data.message);
       }
@@ -77,9 +102,22 @@ function AddNowTask() {
                   setNewTask({ ...task, categorie: e.target.value })
                 }
               >
-                <option value="work">work</option>
-                <option value="sport">Sport</option>
-                <option value="home">home</option>
+                {categoriesData.map((category, index) => (
+                  <option value={category.title} key={index}>
+                    {category.title}
+                  </option>
+                ))}
+                {categoriesData && categoriesData.length > 0 ? (
+                  categoriesData.map((category, index) => (
+                    <option value={category.title} key={index}>
+                      {category.title}
+                    </option>
+                  ))
+                ) : (
+                  <option colSpan="2" className="text-center py-4">
+                    No categories found
+                  </option>
+                )}
               </select>
             </div>
             <div className="flex flex-flex gap-3 items-center">
