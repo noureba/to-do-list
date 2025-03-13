@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -7,8 +7,24 @@ import { UserContext } from "../../contexts/userContext";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 
 function Home() {
-  const { backendURL, tasks, taskView, setTasksView, modal, setModal } =
+  const { backendURL, tasks, taskView, setTasksView, modal, setModal, setUserData, setLogin, login } =
     useContext(UserContext);
+
+   useLayoutEffect(() => {
+      const test = async () => {
+        const { data } = await axios.get(backendURL + "/api/user/data", {
+          withCredentials: true,
+        });
+        if (data.success) {
+          setUserData(data);
+          setLogin(true);
+        } else {
+          setUserData({});
+          setLogin(false);
+        }
+      };
+      test();
+    }, [login]);
 
   const [edit, setNewEdite] = useState({
     postId: sessionStorage.getItem("taskId"),
@@ -44,7 +60,6 @@ function Home() {
   };
 
   const editeHandler = async (e) => {
-    console.log(edit)
     e.preventDefault();
     try {
       const { data } = await axios.put(

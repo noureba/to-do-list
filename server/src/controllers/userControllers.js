@@ -2,8 +2,9 @@ import userCategorie from "../models/categoriesSchema.js";
 import userTask from "../models/tasksSchema.js";
 import userModel from "../models/userSchema.js";
 
+//user data
 export const userData = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req;
   if (!userId) {
     return res.json({
       success: false,
@@ -38,7 +39,7 @@ export const userData = async (req, res) => {
 
 //taskts list
 export const tasksList = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req;
   if (!userId) {
     return res.json({
       success: false,
@@ -69,7 +70,7 @@ export const tasksList = async (req, res) => {
 
 //categories list
 export const categoriesList = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req;
   if (!userId) {
     return res.json({
       success: false,
@@ -77,19 +78,118 @@ export const categoriesList = async (req, res) => {
     });
   }
   try {
-    const categories = await userCategorie.find({userId})
-    if(!categories){
+    const categories = await userCategorie.find({ userId });
+    if (!categories) {
       return res.json({
-        success:false,
-        message:"categories not found"
-      })
+        success: false,
+        message: "categories not found",
+      });
     }
     res.json({
-      success:true,
-      categories
-    })
+      success: true,
+      categories,
+    });
   } catch (error) {
     return res.josn({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//user change profile
+export const userChangeProfile = async (req, res) => {
+  const { userId, file } = req;
+  if ((!userId, !file)) {
+    return res.json({
+      success: false,
+      message: "Messing details",
+    });
+  }
+
+  try {
+    //find user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json("User not logged in");
+    }
+
+    user.photo = file.filename;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Profile updated successfully",
+      profile: user.profile,
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//user change name
+export const userChangeName = async (req, res) => {
+  const { userId } = req;
+  const { newName } = req.body;
+  if (!userId || !newName) {
+    return res.json({
+      success: false,
+      message: "Messing details",
+    });
+  }
+  try {
+    //find user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "user not found",
+      });
+    }
+    user.name = newName;
+    await user.save();
+    return res.json({
+      success: true,
+      message: "name hase been change successfuly",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//user change name
+export const userChangeEmail = async (req, res) => {
+  const { userId } = req;
+  const { newEmail } = req.body;
+  if (!userId || !newEmail) {
+    return res.json({
+      success: false,
+      message: "Messing details",
+    });
+  }
+  try {
+    //find user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "user not found",
+      });
+    }
+    user.email = newEmail;
+    await user.save();
+    return res.json({
+      success: true,
+      message: "email hase been change successfuly",
+    });
+  } catch (error) {
+    return res.json({
       success: false,
       message: error.message,
     });

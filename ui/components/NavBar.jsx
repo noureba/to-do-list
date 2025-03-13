@@ -93,7 +93,7 @@ function NavBar() {
               Hi, <span className="undeline"> {userData.user.name}</span>
               <Image
                 className="rounded"
-                src={userData.user.photo}
+                src={backendURL + "/"+userData.user.photo}
                 width={30}
                 height={30}
                 alt="profile photo"
@@ -135,7 +135,7 @@ function NavBar() {
                     Hi, <span className="undeline"> {userData.user.name}</span>
                     <Image
                       className="rounded"
-                      src={userData.user.photo}
+                      src={backendURL + "/"+userData.user.photo}
                       width={30}
                       height={30}
                       alt="profile photo"

@@ -2,7 +2,8 @@ import userCategorie from "../models/categoriesSchema.js";
 
 //create new category
 export const createCategory = async (req, res) => {
-  const { userId, title } = req.body;
+  const {userId} = req
+  const { title } = req.body;
   if (!userId || !title) {
     return res.json({
       success: false,
@@ -35,7 +36,8 @@ export const createCategory = async (req, res) => {
 
 //delete category
 export const deleteCategory = async (req, res) => {
-  const { userId, categoryId } = req.body;
+  const { categoryId } = req.body;
+  const {userId} = req
   if (!userId || !categoryId) {
     return res.json({
       success: false,

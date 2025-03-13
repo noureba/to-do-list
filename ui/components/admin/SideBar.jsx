@@ -11,7 +11,7 @@ import { IoIosSettings } from "react-icons/io";
 import { IoLogOutSharp } from "react-icons/io5";
 
 function SideBar() {
-  const { backendURL, userData, view, setView, SideBarMenu, setSidBareMenu } =
+  const { backendURL, userData, setView, SideBarMenu, setSidBareMenu } =
     useContext(UserContext);
 
   return (
@@ -25,14 +25,15 @@ function SideBar() {
         <div className="flex flex-col rounded-xl bg-gray-900 justify-center items-center gap-2 text-white p-5 ">
           <Image
             className="rounded-full border border-white bg-white"
-            src={Logo}
+            src={backendURL + "/"+userData.user.photo}
             width={`${SideBarMenu ? 70 : 100}`}
+            height={50}
             alt="logo"
           />
           {!SideBarMenu ? (
             <div>
-              <h2>noureddine</h2>
-              <h3>nouredine@gmail.com</h3>
+              <h2>{userData.user.name}</h2>
+              <h3>{userData.user.email}</h3>
             </div>
           ) : null}
         </div>

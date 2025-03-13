@@ -1,11 +1,13 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userSchema.js";
+import transport from "../config/nodemailer.js";
+import { text } from "express";
 
 //register
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
-  if ((!name || !email || !password)) {
+  if (!name || !email || !password) {
     return res.json({
       success: false,
       message: "Messing details",
@@ -41,7 +43,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   if ((!email, !password)) {
-    return res.josn({
+    return res.json({
       success: false,
       message: "Details are messing",
     });
@@ -104,6 +106,58 @@ export const logout = async (req, res) => {
     res.json({
       success: true,
       message: "Logout succes",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//send email Verification
+export const sendEmailVerification = async (req, res) => {
+  const { userId } = req;
+  if (!userId) {
+    return res.json({
+      success: false,
+      message: "Messing details",
+    });
+  }
+  try {
+    //user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "user not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.json({
+        success: false,
+        message: "user already verifyed",
+      });
+    }
+
+    //generate roandom number
+    const otp = String(Math.floor(1000000 + Math.random() * 900000));
+    user.otp = otp;
+    user.otpExpiredAt = Date.now() + 60 * 60 * 10000;
+    await user.save();
+
+    const email = {
+      from: process.env.STMP_EMAIL,
+      to: user.email,
+      subject: "otp",
+      text: `hello this is you otp ${otp}`,
+    };
+    await transport.sendMail(email);
+
+    return res.json({
+      success: true,
+      message: "please check you email",
     });
   } catch (error) {
     return res.json({

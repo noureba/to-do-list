@@ -21,6 +21,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static("uploads/images"))
 
 //routes
 app.get("/", (rea, res) => {

@@ -1,11 +1,8 @@
 "use client";
 import React, {
   createContext,
-  useEffect,
-  useLayoutEffect,
   useState,
 } from "react";
-import axios from "axios";
 
 export const UserContext = createContext();
 
@@ -16,25 +13,10 @@ export const UserProvider = ({ children }) => {
   const [view, setView] = useState("home");
   const [SideBarMenu, setSidBareMenu] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [tasks, setTasks] = useState({});
+  const [tasks, setTasks] = useState([]);
   const [taskView, setTasksView] = useState(false);
   const [modal, setModal] = useState(false);
-
-  useLayoutEffect(() => {
-    const test = async () => {
-      const { data } = await axios.get(backendURL + "/api/user/data", {
-        withCredentials: true,
-      });
-      if (data.success) {
-        setUserData(data);
-        setLogin(true);
-      } else {
-        setUserData({});
-        setLogin(false);
-      }
-    };
-    test();
-  }, [login]);
+  const [profile, setProfile]= useState(null)
 
   const user = {
     backendURL,
@@ -54,6 +36,7 @@ export const UserProvider = ({ children }) => {
     setTasksView,
     modal,
     setModal,
+    profile, setProfile
   };
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };
