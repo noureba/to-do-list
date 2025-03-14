@@ -2,8 +2,19 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userSchema.js";
 import transport from "../config/nodemailer.js";
-import { text } from "express";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { randomInt } from "crypto";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const templatePath = path.join(
+  __dirname,
+  "../templates/emailVerification.html"
+);
+const emailTemplate = fs.readFileSync(templatePath, "utf-8");
 //register
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -144,20 +155,106 @@ export const sendEmailVerification = async (req, res) => {
     //generate roandom number
     const otp = String(Math.floor(1000000 + Math.random() * 900000));
     user.otp = otp;
-    user.otpExpiredAt = Date.now() + 60 * 60 * 10000;
+    user.otpExpiredAt = Date.now() + 60 * 60 * 1000;
     await user.save();
+    const filledTemplate = emailTemplate.replace("{{otpCode}}", otp);
 
     const email = {
       from: process.env.STMP_EMAIL,
       to: user.email,
-      subject: "otp",
-      text: `hello this is you otp ${otp}`,
+      subject: "Your OTP Code for Email Verification",
+      html: filledTemplate,
     };
     await transport.sendMail(email);
 
     return res.json({
       success: true,
       message: "please check you email",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//verfy email otp
+export const emailVerficationotp = async (req, res) => {
+  const { userId } = req;
+  const { otp } = req.body;
+
+  if (!userId || !otp) {
+    return res.json({
+      success: false,
+      message: "messing details",
+    });
+  }
+
+  try {
+    //find user
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "user not found",
+      });
+    }
+    // check otp
+    if (user.otp != otp) {
+      return res.json({
+        success: false,
+        message: "otp not true",
+      });
+    }
+    //check otp time
+    if (user.otpExpiredAt <= Date.now()) {
+      return res.json({
+        success: false,
+        message: "your otp expired",
+      });
+    }
+    (user.isVerified = true), (user.otpExpiredAt = 0);
+    user.otp = "";
+    await user.save();
+    return res.json({
+      success: true,
+      message: "your account is verified",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+//delet acount
+export const deleteAccount = async (req, res) => {
+  const { userId } = req;
+  if (!userId) {
+    return res.json({
+      success: false,
+      message: "messing details",
+    });
+  }
+  try {
+    //user
+    const user = await userModel.findByIdAndDelete(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "your account not deleted",
+      });
+    }
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.MODE == "production",
+      sameSite: process.env.MODE === "production" ? "none" : "Lax",
+    });
+    return res.json({
+      success: true,
+      message: "your account  deleted",
     });
   } catch (error) {
     return res.json({

@@ -87,7 +87,7 @@ function NavBar() {
             </li>
           </ul>
         </div>
-        {userData.success ? (
+        {userData?.success && userData?.user ? 
           <div className="flex flex-col  md:block hidden">
             <p className="flex justify-center items-center gap-2">
               Hi, <span className="undeline"> {userData.user.name}</span>
@@ -103,7 +103,7 @@ function NavBar() {
               Log out
             </button>
           </div>
-        ) : (
+         : 
           <div className="flex justify-center items-center gap-5 md:block hidden">
             <Link href="/login" className="underline decoration-[#8ECAE6] px-5">
               Sing in
@@ -112,7 +112,7 @@ function NavBar() {
               <Link href="/register">Sing up</Link>
             </button>
           </div>
-        )}        
+        }        
         <div className="md:hidden">
           <button onClick={mobileMenuHandler}>
             <FaBars className="text-2xl" />

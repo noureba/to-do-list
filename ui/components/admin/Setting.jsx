@@ -1,4 +1,10 @@
-import React, { useContext, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import Image from "next/image";
 import { UserContext } from "../../contexts/userContext";
 import axios from "axios";
@@ -8,8 +14,11 @@ import { FaRegSave } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineNumber } from "react-icons/ai";
+import { FaCheckCircle } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 function Setting() {
+  const router = useRouter()
   const fileInputRef = useRef(null);
   const {
     userData,
@@ -21,11 +30,30 @@ function Setting() {
     setProfile,
     taskView,
     setTasksView,
+    sentEmail,
+    setSentEmail,
+    timeLeft,
+    setTimeLeft
   } = useContext(UserContext);
 
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [verification, setVerefication] = useState(false);
+  const [deleteAcount, setDeleteAcount] = useState(false);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
 
   useLayoutEffect(() => {
     const test = async () => {
@@ -41,7 +69,7 @@ function Setting() {
       }
     };
     test();
-  }, [login, taskView]);
+  }, [login, taskView, verification]);
 
   const triggerFileInput = () => {
     fileInputRef.current.click();
@@ -117,7 +145,26 @@ function Setting() {
       toast.error("please add you email");
     }
   };
-  const handelVerify = () => {};
+  const handelVerify = async () => {
+    try {
+      const { data } = await axios.post(
+        backendURL + "/api/auth/verified-otp",
+        { otp },
+        {
+          withCredentials: true,
+        }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        setOtp("");
+        setVerefication(true);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      return toast.error(error.message);
+    }
+  };
 
   const hnadelSendEmailVerification = async () => {
     try {
@@ -130,6 +177,8 @@ function Setting() {
       );
       if (data.success) {
         toast.success(data.message);
+        setLogin(!login)
+        setSentEmail(true);
       } else {
         toast.error(data.message);
       }
@@ -137,6 +186,20 @@ function Setting() {
       return toast.error(error.message);
     }
   };
+
+  const handelDeleteAccount = () => {
+    setDeleteAcount(!deleteAcount);
+  };
+
+  const handelDeleteAccountYes = async()=>{
+    const {data} = await axios.delete(backendURL+"/api/auth/delete-account",{
+      withCredentials:true
+    })
+    if(data.success){
+      toast.success(data.message)
+      router.push("/")
+    }
+  }
 
   return (
     <>
@@ -226,39 +289,93 @@ function Setting() {
                 </button>
               </div>
             </li>
-            <li className="flex text-white gap-2 border-0 border-b justify-start items-center cursor-pointer">
-              <div>
-                <h3 className="text-xl">Verify email : </h3>
-                <p
-                  className="underline text-blue-500"
-                  onClick={hnadelSendEmailVerification}
-                >
-                  Send email verification
-                </p>
-              </div>
-              <div className="bg-white text-gray-900 flex gap-2 border rounded justify-start items-center p-1">
-                <i className="text-xl">
-                  <AiOutlineNumber />
+            {userData.user.isVerified ? (
+              <li className="flex gap-3 justfiy-center items-center">
+                <h3 className="text-xl text-green-500 underline">
+                  you acount verified
+                </h3>
+                <i className="text-xl text-green-500 underline">
+                  <FaCheckCircle />
                 </i>
-                <input
-                  className="outline-hidden text-lg w-[100%] "
-                  type="number"
-                  placeholder="OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                />
-                <button
-                  className="flex gap-2 bg-green-500 p-2 justify-center items-center text-gray-900 rounded cursor-pointer"
-                  onClick={handelVerify}
-                >
-                  <FaRegSave />
-                  <p>Verify</p>
-                </button>
-              </div>
-            </li>
-            <li className="flex text-white gap-2 border-0 border-b justify-start items-center cursor-pointer">
-              Delete account
+              </li>
+            ) : (
+              <li className="flex text-white gap-2 border-0 border-b justify-start items-center cursor-pointer">
+                <div>
+                  <h3 className="text-xl">Verify email : </h3>
+                  {sentEmail ? (
+                    <p className="underline text-blue-700 ">
+                      please check your email
+                    </p>
+                  ) : (
+                    <p
+                      className="underline text-blue-500 "
+                      onClick={hnadelSendEmailVerification}
+                    >
+                      Send email verification
+                    </p>
+                  )}
+                </div>
+                {sentEmail ? (
+                  <div>
+                    <div className="bg-white text-gray-900 flex gap-2 border rounded justify-start items-center p-1">
+                      <i className="text-xl">
+                        <AiOutlineNumber />
+                      </i>
+                      <input
+                        className="outline-hidden text-lg w-[100%] "
+                        type="number"
+                        placeholder="OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                      />
+                      <button
+                        className="flex gap-2 bg-green-500 p-2 justify-center items-center text-gray-900 rounded cursor-pointer"
+                        onClick={handelVerify}
+                      >
+                        <FaRegSave />
+                        <p>Verify</p>
+                      </button>
+                    </div>
+                    <div className="flex">
+                      <p className="text-yellow-500">
+                        Your otp well be expared in 10 minutes :{" "}
+                      </p>
+                      <p className="text-yellow-500">
+                        {minutes} : {seconds}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+              </li>
+            )}
+
+            <li className="flex flex-col justify-start items-start text-white gap-2 border-0 border-b justify-start items-center cursor-pointer">
+              <button
+                className="bg-red-600 p-2 text-white rounded"
+                onClick={handelDeleteAccount}
+              >
+                Delete account
+              </button>
+              {deleteAcount ? (
+                <div>
+                  <p>are you shour you?</p>
+                  <div className="flex gap-3">
+                    <button
+                      className="bg-red-800 p-1 text-white cursor-pointer rounded"
+                      onClick={handelDeleteAccountYes}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      className="p-1 text-white cursor-pointer rounded"
+                      onClick={handelDeleteAccount}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </li>
           </ul>
         </div>

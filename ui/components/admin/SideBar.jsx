@@ -25,7 +25,7 @@ function SideBar() {
         <div className="flex flex-col rounded-xl bg-gray-900 justify-center items-center gap-2 text-white p-5 ">
           <Image
             className="rounded-full border border-white bg-white"
-            src={backendURL + "/"+userData.user.photo}
+            src={userData.user.photo? backendURL + "/"+userData.user.photo: Logo}
             width={`${SideBarMenu ? 70 : 100}`}
             height={50}
             alt="logo"

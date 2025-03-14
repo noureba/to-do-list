@@ -9,7 +9,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const backendURL = "http://localhost:5000";
   const [login, setLogin] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({success:false});
   const [view, setView] = useState("home");
   const [SideBarMenu, setSidBareMenu] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,8 @@ export const UserProvider = ({ children }) => {
   const [taskView, setTasksView] = useState(false);
   const [modal, setModal] = useState(false);
   const [profile, setProfile]= useState(null)
+  const [sentEmail , setSentEmail] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(10 * 60);
 
   const user = {
     backendURL,
@@ -36,7 +38,8 @@ export const UserProvider = ({ children }) => {
     setTasksView,
     modal,
     setModal,
-    profile, setProfile
+    profile, setProfile,
+    sentEmail , setSentEmail,timeLeft, setTimeLeft
   };
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };
