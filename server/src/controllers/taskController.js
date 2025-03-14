@@ -2,7 +2,8 @@ import userTask from "../models/tasksSchema.js";
 
 //add new task
 export const addNewTask = async (req, res) => {
-  const { userId, title, desc, categorie, date } = req.body;
+  const {userId} = req
+  const { title, desc, categorie, date } = req.body;
 
   if (!userId || !title) {
     res.json({
@@ -28,7 +29,9 @@ export const addNewTask = async (req, res) => {
 
 //delete task
 export const deletTask = async (req, res) => {
-  const { userId, postId } = req.body;
+  const {userId} = req
+
+  const { postId } = req.body;
 
   if (!userId || !postId) {
     return res.json({
@@ -58,7 +61,9 @@ export const deletTask = async (req, res) => {
 
 //edite task
 export const editTask = async (req, res) => {
-  const { userId, postId, title, desc, categorie, date } = req.body;
+  const {userId} = req
+
+  const { postId, title, desc, categorie, date } = req.body;
 
   if (!userId || !title || !postId) {
     return res.json({
@@ -94,7 +99,8 @@ export const editTask = async (req, res) => {
 
 //complet task
 export const completeTask = async (req, res) => {
-  const { userId, postId } = req.body;
+  const {userId} = req
+  const { postId } = req.body;
   if (!userId || !postId) {
     return res.json({
       status: false,

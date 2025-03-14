@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: "https://avatars.githubusercontent.com/u/19819005?v=4",
+    default: "1741873670059_icon.webp",
   },
   bio: {
     type: String,
@@ -28,6 +28,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ["admin", "user"],
     default: "user",
+  },
+  otp :{
+    type: String,
+    default:""
+  },
+  otpExpiredAt:{
+    type:Number,
+    default:0
   },
   isVerified: {
     type: Boolean,

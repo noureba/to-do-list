@@ -12,7 +12,7 @@ const isAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (decoded.id) {
-      req.body.userId = decoded.id;
+      req.userId = decoded.id;
     } else {
       return res.json({
         succes: false,
