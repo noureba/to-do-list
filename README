@@ -1,0 +1,67 @@
+# To-Do List App
+
+🚀 **To-Do List App** is a web application that helps you organize your daily tasks easily.
+
+## 🛠️ Technologies Used
+### **Back-end:**
+- **Node.js** - JavaScript runtime environment
+- **Express.js** - Web framework for building APIs
+- **MongoDB & Mongoose** - NoSQL database and ODM library
+- **bcrypt** - For password encryption
+- **jsonwebtoken (JWT)** - For authentication and session security
+- **cookie-parser** - For handling cookies
+- **dotenv** - For managing environment variables
+- **CORS** - To enable cross-origin requests
+
+### **Front-end:**
+- **Next.js** - React framework for web applications
+- **React.js** - Library for building user interfaces
+- **Axios** - For making API requests
+- **JS-Cookie** - For handling cookies in the browser
+- **React-Toastify** - For displaying notifications
+- **React-Icons** - For adding stylish icons
+- **Tailwind CSS** - For easy and efficient styling
+- **PostCSS** - For enhancing CSS styles
+
+---
+
+## 🚀 **How to Run the Project**
+### **1️⃣ Setting Up the Server (Back-end)**
+```bash
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+```
+
+### **2️⃣ Setting Up the Front-end**
+```bash
+# Navigate to the front-end directory
+cd client
+
+# Install dependencies
+npm install
+
+# Start the application
+npm run dev
+```
+
+---
+
+## 🌟 **Features**
+✅ Add new tasks 📌  
+✅ Update and delete tasks ✏️  
+✅ User authentication (Login & Register) 🔐  
+✅ Session security using JWT 🛡️  
+✅ Modern UI with Tailwind CSS 🎨  
+✅ Notifications with React-Toastify 🔔  
+
+---
+
+## 📌 **Additional Information**
+- Make sure to set up the `.env` file for environment variables (such as JWT secret and database connection details).
+- Sessions are stored using cookies for better user security.
+- The application is fully responsive.
+
+🚀 **Start organizing your tasks effortlessly today!** 🎯
