@@ -1,3 +1,4 @@
+'use client';
 import axios from "axios";
 import React, { useContext, useLayoutEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";

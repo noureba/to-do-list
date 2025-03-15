@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import { FaTasks } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";

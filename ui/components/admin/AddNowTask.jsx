@@ -1,3 +1,4 @@
+'use client';
 import React, { useContext, useState, useLayoutEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../../contexts/userContext";

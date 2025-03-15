@@ -1,3 +1,4 @@
+'use client';
 import React, { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { MdDeleteOutline } from "react-icons/md";

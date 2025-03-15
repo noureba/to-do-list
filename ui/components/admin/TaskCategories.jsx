@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useContext, useLayoutEffect } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from "axios";
