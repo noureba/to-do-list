@@ -7,7 +7,7 @@ import React, {
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const backendURL = "http://localhost:5000";
+  const backendURL = import.meta.env.BACK_END_URI;
   const [login, setLogin] = useState(false);
   const [userData, setUserData] = useState({success:false});
   const [view, setView] = useState("home");
