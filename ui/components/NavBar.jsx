@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState, useLayoutEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import { UserContext } from "../contexts/userContext";
 import axios from "axios";
@@ -44,7 +44,7 @@ function NavBar() {
     setMenu(false);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const test = async () => {
       const { data } = await axios.get(backendURL + "/api/user/data", {
         withCredentials: true,
